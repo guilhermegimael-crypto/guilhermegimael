@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0C3328">
+<title>No Limite</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#0C3328}
+  body{
+    color:#F1F7F0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;line-height:1.45;
+    padding:16px 14px calc(30px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:520px;margin:0 auto}
+  .brand{display:flex;align-items:baseline;gap:9px;margin-bottom:16px}
+  .logo{font-weight:800;font-size:23px;letter-spacing:-.03em;background:#FFCE00;color:#0A2A20;padding:5px 9px;border-radius:6px}
+  .tagline{font-size:12px;color:#8FB5A4}
+  .panel{background:rgba(255,255,255,.065);border:1px solid rgba(241,247,240,.16);border-radius:14px;padding:16px;margin-bottom:12px}
+  h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+  p.note{font-size:14px;color:#8FB5A4;margin:0}
+  label{display:block;font-size:13px;color:#8FB5A4;margin-bottom:6px}
+  input{width:100%;font-size:17px;font-family:inherit;color:#F1F7F0;background:rgba(0,0,0,.28);
+    border:1px solid rgba(241,247,240,.16);border-radius:10px;padding:13px 14px;outline:none;-webkit-appearance:none;margin-bottom:12px}
+  input:focus{border-color:#FFCE00}
+  button{width:100%;font-family:inherit;font-size:16px;font-weight:700;border:0;border-radius:12px;
+    padding:15px 16px;margin-bottom:9px;cursor:pointer;-webkit-appearance:none;background:#FFCE00;color:#0A2A20}
+  button.ghost{background:transparent;color:#F1F7F0;border:1px solid rgba(241,247,240,.16)}
+  button.burn{background:#FF5A36;color:#fff}
+  button:disabled{opacity:.45}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .chip{width:auto;font-size:13px;font-weight:600;padding:8px 13px;border-radius:999px;margin:0;
+    background:transparent;color:#F1F7F0;border:1px solid rgba(241,247,240,.16)}
+  .chip.on{background:#FFCE00;color:#0A2A20;border-color:#FFCE00}
+  .code{font-weight:800;font-size:50px;letter-spacing:.14em;color:#FFCE00;line-height:1.1}
+  .qcard{background:#FFCE00;color:#0A2A20;border-radius:14px;padding:18px 16px 20px;margin-bottom:12px}
+  .qcard .q{font-weight:800;font-size:24px;line-height:1.12;letter-spacing:-.02em}
+  .qcard .u{font-size:13px;margin-top:10px;opacity:.72}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:#8FB5A4;margin-bottom:10px}
+  .guess{font-size:38px!important;font-weight:800;text-align:center;padding:16px 12px!important}
+  .row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(241,247,240,.16)}
+  .row:last-child{border-bottom:0}
+  .dot{width:9px;height:9px;border-radius:9px;background:#8FB5A4;opacity:.4;flex:none}
+  .dot.on{background:#FFCE00;opacity:1}
+  .pts{margin-left:auto;font-weight:800;font-size:19px;color:#FFCE00}
+  .g{margin-left:auto;font-weight:800;font-size:21px}
+  .g.over{color:#FF5A36;text-decoration:line-through}
+  .g.win{color:#FFCE00}
+  .tag{font-size:11px;font-weight:700;padding:3px 7px;border-radius:5px;flex:none}
+  .tag.win{background:#FFCE00;color:#0A2A20}
+  .tag.over{background:rgba(255,90,54,.18);color:#FF5A36}
+  .tag.bull{background:#FF5A36;color:#fff}
+  .answer{text-align:center;padding:20px 14px;border:2px dashed rgba(255,206,0,.5);border-radius:14px;margin-bottom:12px}
+  .answer .v{font-weight:800;font-size:52px;line-height:1;color:#FFCE00;margin-top:4px}
+  .pos{font-weight:800;font-size:24px;color:#8FB5A4;width:28px}
+  .pos.first{color:#FFCE00}
+  .err{background:rgba(255,90,54,.14);border:1px solid rgba(255,90,54,.45);color:#FFC4B4;
+    border-radius:10px;padding:11px 13px;font-size:14px;margin-bottom:10px}
+  .nm{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="logo">NO LIMITE</div><div class="tagline">chute sem passar</div></div>
+  <div id="app"><div class="panel"><p class="note">Carregando…</p></div></div>
+</div>
+
+<script>
+/* ===================================================================
+   1. COLE AQUI A URL DO SEU BANCO FIREBASE (veja o README)
+   Exemplo: https://no-limite-abc12-default-rtdb.firebaseio.com
+   =================================================================== */
+var DB_URL = "";
+/* =================================================================== */
+
+var RAW = [
+["Geografia","Quantos países fazem fronteira com o Brasil?",10,""],
+["Geografia","Quantos países existem na América do Sul?",12,""],
+["Geografia","Qual a altura do Monte Everest?",8849,"metros"],
+["Geografia","Quantos fusos horários oficiais o Brasil tem?",4,""],
+["Geografia","Quantos países fazem parte da União Europeia?",27,""],
+["Geografia","Quantos países usam o euro como moeda oficial?",20,""],
+["Geografia","Qual a profundidade máxima da Fossa das Marianas?",10935,"metros"],
+["Geografia","Quantos km tem a Muralha da China somando todos os trechos?",21196,"km"],
+["Geografia","Quantos estados tem os Estados Unidos?",50,""],
+["Geografia","Qual a altura da queda Horseshoe, nas Cataratas do Niágara?",51,"metros"],
+["História","Em que ano os portugueses chegaram ao Brasil?",1500,""],
+["História","Em que ano foi proclamada a República no Brasil?",1889,""],
+["História","Em que ano acabou a Segunda Guerra Mundial?",1945,""],
+["História","Quantos anos durou a Guerra dos Cem Anos?",116,"anos"],
+["História","Em que ano o homem pisou na Lua pela primeira vez?",1969,""],
+["História","Em que ano caiu o Muro de Berlim?",1989,""],
+["História","Em que ano foi assinada a Lei Áurea?",1888,""],
+["História","Quantas esposas teve o rei Henrique VIII da Inglaterra?",6,""],
+["História","Em que ano o Titanic afundou?",1912,""],
+["História","Em que ano começou a Primeira Guerra Mundial?",1914,""],
+["História","Em que ano Brasília foi inaugurada como capital?",1960,""],
+["História","Em que ano começou a ditadura militar no Brasil?",1964,""],
+["Futebol","Quantas Copas do Mundo o Brasil já ganhou?",5,""],
+["Futebol","Quantos gols Pelé marcou pela Seleção em jogos oficiais?",77,"gols"],
+["Futebol","Em que ano o Brasil ganhou a primeira Copa do Mundo?",1958,""],
+["Futebol","Quantas Champions League o Real Madrid tinha até 2025?",15,""],
+["Futebol","Quantas Bolas de Ouro Messi já ganhou?",8,""],
+["Futebol","Quantas Libertadores o São Paulo tem?",3,""],
+["Futebol","Quantas edições da Copa do Mundo aconteceram até 2022?",22,""],
+["Futebol","Quantos minutos tem uma partida sem acréscimos?",90,"minutos"],
+["Futebol","Em que ano o Brasil sediou a Copa do Mundo pela segunda vez?",2014,""],
+["Futebol","Qual o comprimento máximo de um campo oficial?",105,"metros"],
+["Futebol","Quantos gols o Brasil tomou da Alemanha em 2014?",7,"gols"],
+["Cinema e TV","Quantos Oscars o filme Titanic ganhou?",11,""],
+["Cinema e TV","Quantos minutos dura o filme Titanic?",194,"minutos"],
+["Cinema e TV","Quantos filmes tem a saga Harry Potter no cinema?",8,""],
+["Cinema e TV","Quantas temporadas tem Game of Thrones?",8,""],
+["Cinema e TV","Em que ano estreou o primeiro Toy Story?",1995,""],
+["Cinema e TV","Quantos episódios tem a série Friends?",236,"episódios"],
+["Cinema e TV","Quantos Oscars de atuação Meryl Streep ganhou?",3,""],
+["Cinema e TV","Quantos minutos dura Vingadores: Ultimato?",181,"minutos"],
+["Cinema e TV","Em que ano estreou o primeiro Matrix?",1999,""],
+["Cinema e TV","Quantos episódios tem Breaking Bad?",62,"episódios"],
+["Cinema e TV","Em que ano estreou o primeiro filme de Star Wars?",1977,""],
+["Cinema e TV","Quantos minutos dura O Poderoso Chefão?",175,"minutos"],
+["Música","Quantas teclas tem um piano padrão?",88,"teclas"],
+["Música","Quantas cordas tem um violão comum?",6,""],
+["Música","Em que ano os Beatles anunciaram o fim da banda?",1970,""],
+["Música","Quantos Grammys Beyoncé tinha até 2025?",35,""],
+["Música","Quantos segundos dura Bohemian Rhapsody?",355,"segundos"],
+["Música","Em que ano aconteceu o primeiro Rock in Rio?",1985,""],
+["Música","Em que ano nasceu o rei Roberto Carlos?",1941,""],
+["Ciência","Quantos ossos tem o corpo humano adulto?",206,"ossos"],
+["Ciência","Quantos dentes tem um adulto com a arcada completa?",32,"dentes"],
+["Ciência","Quantos elementos tem a tabela periódica atual?",118,""],
+["Ciência","Quantos cromossomos tem uma célula humana?",46,""],
+["Ciência","Quantos km por segundo a luz percorre no vácuo?",299792,"km/s"],
+["Ciência","Quantos planetas tem o Sistema Solar?",8,""],
+["Ciência","Quantas luas tem Marte?",2,""],
+["Ciência","Qual a distância média entre a Terra e a Lua?",384400,"km"],
+["Ciência","Quantos litros de sangue tem em média um adulto?",5,"litros"],
+["Ciência","Quantos dias a Terra leva para dar uma volta no Sol?",365,"dias"],
+["Ciência","Quantas câmaras tem o coração humano?",4,""],
+["Ciência","Quantos graus tem a soma dos ângulos de um triângulo?",180,"graus"],
+["Animais","Quantos corações tem um polvo?",3,""],
+["Animais","Quantas patas tem uma aranha?",8,""],
+["Animais","Qual a velocidade máxima do guepardo?",120,"km/h"],
+["Animais","Quantos compartimentos tem o estômago de uma vaca?",4,""],
+["Animais","Quantos metros pode medir uma baleia-azul adulta?",30,"metros"],
+["Animais","Quantas vértebras tem o pescoço de uma girafa?",7,""],
+["Animais","Quantos dias dura a gestação de uma elefanta?",660,"dias"],
+["Animais","Quantos ovos uma galinha poedeira põe por ano?",300,"ovos"],
+["Brasil","Quantos municípios tem o Brasil?",5570,"municípios"],
+["Brasil","Quantos estados tem o Brasil sem contar o Distrito Federal?",26,""],
+["Brasil","Quantos senadores compõem o Senado Federal?",81,""],
+["Brasil","Quantos deputados federais tem a Câmara?",513,""],
+["Brasil","Quantas estrelas tem a bandeira do Brasil?",27,"estrelas"],
+["Brasil","Quantos metros tem a estátua do Cristo Redentor sem o pedestal?",30,"metros"],
+["Brasil","Quantas letras tem o alfabeto da língua portuguesa?",26,"letras"],
+["Brasil","Quantos ministros tem o Supremo Tribunal Federal?",11,""],
+["Tecnologia","Em que ano o Google foi fundado?",1998,""],
+["Tecnologia","Em que ano foi lançado o primeiro iPhone?",2007,""],
+["Tecnologia","Em que ano o Facebook foi criado?",2004,""],
+["Tecnologia","Em que ano o YouTube foi lançado?",2005,""],
+["Tecnologia","Quantos caracteres era o limite original de um tweet?",140,"caracteres"],
+["Tecnologia","Em que ano a Microsoft foi fundada?",1975,""],
+["Tecnologia","Em que ano o ChatGPT foi lançado ao público?",2022,""],
+["Tecnologia","Quantos bits tem um byte?",8,"bits"],
+["Tecnologia","Em que ano o Instagram foi lançado?",2010,""],
+["Esportes","Quantos jogadores de um time ficam em quadra no vôlei?",6,""],
+["Esportes","Quantos buracos tem um campo de golfe oficial?",18,"buracos"],
+["Esportes","Quantas voltas tem a corrida das 500 Milhas de Indianápolis?",200,"voltas"],
+["Esportes","Quantas medalhas de ouro olímpicas Michael Phelps ganhou?",23,""],
+["Esportes","Quantos metros tem uma piscina olímpica?",50,"metros"],
+["Esportes","Quantos pontos vale um touchdown no futebol americano?",6,"pontos"],
+["Esportes","Qual a altura da cesta de basquete oficial?",305,"centímetros"],
+["Esportes","Quantos títulos mundiais de F1 Ayrton Senna conquistou?",3,""],
+["Curiosidades","Quantas listras tem a bandeira dos Estados Unidos?",13,"listras"],
+["Curiosidades","Quantos degraus tem a Torre Eiffel até o topo?",1665,"degraus"],
+["Curiosidades","Qual a altura da Torre Eiffel com a antena?",330,"metros"],
+["Curiosidades","Qual a altura do Burj Khalifa, o prédio mais alto do mundo?",828,"metros"],
+["Curiosidades","Quantas peças tem um jogo de xadrez no início da partida?",32,"peças"],
+["Curiosidades","Quantas cartas tem um baralho sem os coringas?",52,"cartas"],
+["Curiosidades","Quantos segundos tem um dia?",86400,"segundos"],
+["Curiosidades","Quantas calorias tem um Big Mac?",550,"kcal"],
+["Curiosidades","Quantos anéis tem o símbolo olímpico?",5,"anéis"],
+["Curiosidades","Quantos quilos pesa o troféu da Copa do Mundo?",6,"quilos"]
+];
+var Q = RAW.map(function(r,i){ return {id:i, t:r[0], q:r[1], a:r[2], u:r[3]}; });
+var TEMAS = Q.map(function(x){return x.t;}).filter(function(v,i,s){return s.indexOf(v)===i;});
+
+var app = document.getElementById('app');
+var nf = new Intl.NumberFormat('pt-BR');
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function rid(n){ var o='',c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; for(var i=0;i<n;i++) o+=c[Math.floor(Math.random()*c.length)]; return o; }
+
+var S = {
+  tela:'home', erro:'', nome:'', codigoIn:'',
+  temas:TEMAS.slice(), qtd:10,
+  papel:null, codigo:'', eu:'', sala:null,
+  palpite:'', enviado:false,
+  nomesLocais:['','',''], local:null,
+  timer:null, ocupado:false, assinatura:''
+};
+
+/* ---------- rede ---------- */
+function urlSala(c, sub){ return DB_URL.replace(/\/$/,'') + '/salas/' + c + (sub||'') + '.json'; }
+async function req(url, metodo, corpo){
+  var opt = { method: metodo, headers: {'Content-Type':'application/json'} };
+  if(corpo !== undefined) opt.body = JSON.stringify(corpo);
+  var r = await fetch(url, opt);
+  if(!r.ok) throw new Error('rede ' + r.status);
+  return await r.json();
+}
+var getSala   = function(c){ return req(urlSala(c), 'GET'); };
+var putSala   = function(c, d){ return req(urlSala(c), 'PUT', d); };
+var patchSala = function(c, d){ return req(urlSala(c), 'PATCH', d); };
+var putJog    = function(c, id, d){ return req(urlSala(c, '/jogadores/' + id), 'PUT', d); };
+var patchJog  = function(c, id, d){ return req(urlSala(c, '/jogadores/' + id), 'PATCH', d); };
+
+var online = function(){ return !!DB_URL && DB_URL.indexOf('http') === 0; };
+
+/* ---------- regras ---------- */
+function sortear(temas, n){
+  var pool = Q.filter(function(x){ return temas.indexOf(x.t) >= 0; }).map(function(x){ return x.id; });
+  for(var i = pool.length - 1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  return pool.slice(0, Math.min(n, pool.length));
+}
+function apurar(lista, resposta){
+  var melhor = null;
+  lista.forEach(function(e){
+    if(typeof e.palpite === 'number' && e.palpite <= resposta){
+      if(melhor === null || e.palpite > melhor) melhor = e.palpite;
+    }
+  });
+  return lista.map(function(e){
+    var tem = typeof e.palpite === 'number';
+    var passou = tem && e.palpite > resposta;
+    var ganhou = tem && !passou && melhor !== null && e.palpite === melhor;
+    var mosca = tem && e.palpite === resposta;
+    return { id:e.id, nome:e.nome, palpite: tem ? e.palpite : null,
+             passou:passou, ganhou:ganhou, mosca:mosca, pts: ganhou ? (mosca ? 2 : 1) : 0 };
+  });
+}
+function jogadores(sala){
+  var m = (sala && sala.jogadores) || {};
+  return Object.keys(m).map(function(k){
+    var j = m[k];
+    return { id:k, nome:j.nome || 'Jogador', pontos:j.pontos || 0, rodada: j.rodada, palpite: j.palpite };
+  }).sort(function(a,b){ return (a.nome||'').localeCompare(b.nome||''); });
+}
+
+/* ---------- render ---------- */
+function assinatura(){
+  if(S.tela !== 'sala' || !S.sala) return S.tela + '|' + S.erro;
+  var js = jogadores(S.sala);
+  return ['sala', S.sala.fase, S.sala.i, S.enviado ? 1 : 0, js.length,
+          js.filter(function(j){ return j.rodada === S.sala.i; }).length, S.erro].join('|');
+}
+function pintar(forcar){
+  try{
+    var a = assinatura();
+    if(!forcar && a === S.assinatura) return;
+    S.assinatura = a;
+    app.innerHTML = (S.erro ? '<div class="err">' + esc(S.erro) + '</div>' : '') + tela();
+    var f = app.querySelector('[data-foco]');
+    if(f) setTimeout(function(){ try{ f.focus(); }catch(e){} }, 50);
+  }catch(e){
+    app.innerHTML = '<div class="err">Algo quebrou: ' + esc(e.message) + '</div>' +
+      '<button data-a="inicio">Voltar ao início</button>';
+  }
+}
+function aviso(m){ S.erro = m; pintar(true); setTimeout(function(){ S.erro=''; pintar(true); }, 3500); }
+
+function chipsHTML(){
+  var t = TEMAS.map(function(x){
+    return '<button class="chip' + (S.temas.indexOf(x)>=0 ? ' on' : '') + '" data-a="tema" data-v="' + esc(x) + '">' + esc(x) + '</button>';
+  }).join('');
+  var n = [5,10,15,20].map(function(x){
+    return '<button class="chip' + (S.qtd===x ? ' on' : '') + '" data-a="qtd" data-v="' + x + '">' + x + ' perguntas</button>';
+  }).join('');
+  return '<label>Temas</label><div class="chips">' + t + '</div>' +
+         '<label>Tamanho da partida</label><div class="chips">' + n + '</div>';
+}
+function listaJog(js, fase){
+  return js.map(function(j){
+    var marcou = fase === 'palpite' && j.rodada === S.sala.i;
+    return '<div class="row"><span class="dot' + (marcou || fase==='lobby' ? ' on' : '') + '"></span>' +
+      '<span class="nm">' + esc(j.nome) + '</span>' +
+      (j.id === S.eu ? '<span class="tag win">você</span>' : '') +
+      (fase === 'lobby' ? '' : '<span class="pts">' + (j.pontos||0) + '</span>') + '</div>';
+  }).join('');
+}
+function linhasResultado(res){
+  var r = res.slice().sort(function(a,b){
+    if(a.palpite == null) return 1; if(b.palpite == null) return -1; return b.palpite - a.palpite;
+  });
+  var teve = r.some(function(x){ return x.ganhou; });
+  return r.map(function(x){
+    var tag = x.mosca ? '<span class="tag bull">na mosca +2</span>'
+            : x.ganhou ? '<span class="tag win">+1</span>'
+            : x.passou ? '<span class="tag over">passou</span>' : '';
+    var cls = x.ganhou ? ' win' : (x.passou ? ' over' : '');
+    return '<div class="row"><span class="nm">' + esc(x.nome) + '</span>' + tag +
+      '<span class="g' + cls + '">' + (x.palpite == null ? '—' : nf.format(x.palpite)) + '</span></div>';
+  }).join('') + (teve ? '' : '<p class="note" style="margin-top:10px">Todo mundo passou da resposta. Rodada sem ponto.</p>');
+}
+function placar(js){
+  return js.slice().sort(function(a,b){ return (b.pontos||0)-(a.pontos||0); }).map(function(j,i){
+    return '<div class="row"><span class="pos' + (i===0?' first':'') + '">' + (i+1) + '</span>' +
+      '<span style="font-size:17px">' + esc(j.nome) + '</span><span class="pts">' + (j.pontos||0) + '</span></div>';
+  }).join('');
+}
+function cartaPergunta(q, i, total){
+  return '<div class="meta"><span>Pergunta ' + (i+1) + ' de ' + total + '</span><span>' + esc(q.t) + '</span></div>' +
+    '<div class="qcard"><div class="q">' + esc(q.q) + '</div>' +
+    (q.u ? '<div class="u">Responda em ' + esc(q.u) + '</div>' : '') + '</div>';
+}
+
+function tela(){
+  if(S.tela === 'home') return telaHome();
+  if(S.tela === 'config') return telaConfig();
+  if(S.tela === 'entrar') return telaEntrar();
+  if(S.tela === 'nomes') return telaNomes();
+  if(S.tela === 'sala') return telaSala();
+  if(S.tela === 'local') return telaLocal();
+  return telaHome();
+}
+
+function telaHome(){
+  return '<div class="panel"><h2>Como funciona</h2><p class="note">Aparece uma pergunta com resposta numérica. ' +
+    'Todo mundo chuta um número. Leva o ponto quem chegar mais perto sem ultrapassar. Passou da resposta, queimou. ' +
+    'Cravou o número exato, vale 2 pontos.</p></div>' +
+    '<div class="panel"><h2>Cada um no seu celular</h2>' +
+      (online() ? '' : '<p class="note" style="margin-bottom:12px">A sala online ainda não foi configurada neste site. Veja o README do repositório.</p>') +
+      '<button data-a="criar-setup"' + (online() ? '' : ' disabled') + '>Criar sala</button>' +
+      '<button class="ghost" data-a="ir-entrar"' + (online() ? '' : ' disabled') + ' style="margin-bottom:0">Entrar com código</button></div>' +
+    '<div class="panel"><h2>Um celular só</h2><p class="note" style="margin-bottom:12px">Passa o aparelho de mão em mão. Não depende de conexão.</p>' +
+      '<button class="ghost" data-a="local-setup" style="margin-bottom:0">Jogar em um aparelho</button></div>';
+}
+function telaConfig(){
+  var pedeNome = S.modo === 'online';
+  return '<div class="panel">' +
+    (pedeNome ? '<label for="nome">Seu nome</label><input id="nome" maxlength="14" value="' + esc(S.nome) + '" placeholder="Como aparece no placar" data-foco>' : '') +
+    chipsHTML() +
+    '<button data-a="' + (pedeNome ? 'criar' : 'ir-nomes') + '">' + (pedeNome ? 'Criar sala' : 'Continuar') + '</button>' +
+    '<button class="ghost" data-a="inicio" style="margin-bottom:0">Voltar</button></div>';
+}
+function telaEntrar(){
+  return '<div class="panel">' +
+    '<label for="cod">Código da sala</label>' +
+    '<input id="cod" maxlength="4" value="' + esc(S.codigoIn) + '" placeholder="ABCD" autocapitalize="characters" ' +
+      'style="text-align:center;letter-spacing:.25em;font-size:24px;font-weight:700" data-foco>' +
+    '<label for="nome">Seu nome</label>' +
+    '<input id="nome" maxlength="14" value="' + esc(S.nome) + '" placeholder="Como aparece no placar">' +
+    '<button data-a="entrar">Entrar na sala</button>' +
+    '<button class="ghost" data-a="inicio" style="margin-bottom:0">Voltar</button></div>';
+}
+function telaNomes(){
+  return '<div class="panel"><h2>Quem está jogando</h2>' +
+    S.nomesLocais.map(function(v,i){
+      return '<input class="ln" data-i="' + i + '" maxlength="14" value="' + esc(v) + '" placeholder="Jogador ' + (i+1) + '">';
+    }).join('') +
+    '<button class="ghost" data-a="mais-nome">Adicionar jogador</button>' +
+    '<button data-a="local-comecar">Começar partida</button>' +
+    '<button class="ghost" data-a="inicio" style="margin-bottom:0">Voltar</button></div>';
+}
+
+function telaSala(){
+  if(!S.sala) return '<div class="panel"><p class="note">Conectando na sala ' + esc(S.codigo) + '…</p></div>' +
+    '<button class="ghost" data-a="inicio">Sair</button>';
+  var sala = S.sala, js = jogadores(sala), anfitriao = S.papel === 'anfitriao';
+
+  if(sala.fase === 'lobby'){
+    var link = location.origin + location.pathname + '?sala=' + sala.codigo;
+    return '<div class="panel" style="text-align:center">' +
+      '<p class="note">Código da sala</p><div class="code">' + esc(sala.codigo) + '</div>' +
+      '<p class="note" style="margin-top:8px">Mande o link no grupo e todo mundo entra</p>' +
+      '<button class="ghost" data-a="copiar" data-v="' + esc(link) + '" style="margin-top:12px;margin-bottom:0">Copiar link da sala</button></div>' +
+      '<div class="panel"><p class="note" style="margin-bottom:8px">' + js.length + (js.length === 1 ? ' jogador na sala' : ' jogadores na sala') + '</p>' +
+      listaJog(js, 'lobby') + '</div>' +
+      (anfitriao ? '<button data-a="comecar">Começar partida</button>'
+                 : '<p class="note" style="text-align:center">Esperando o anfitrião começar.</p>') +
+      '<button class="ghost" data-a="inicio" style="margin-bottom:0">Sair da sala</button>';
+  }
+  if(sala.fase === 'fim'){
+    return '<div class="panel"><h2>Placar final</h2>' + placar(js) + '</div>' +
+      (anfitriao ? '<button data-a="denovo">Jogar de novo</button>'
+                 : '<p class="note" style="text-align:center">O anfitrião pode começar outra partida.</p>') +
+      '<button class="ghost" data-a="inicio" style="margin-bottom:0">Sair da sala</button>';
+  }
+
+  var q = Q[sala.qs[sala.i]];
+  var html = cartaPergunta(q, sala.i, sala.qs.length);
+
+  if(sala.fase === 'palpite'){
+    var meu = js.filter(function(j){ return j.id === S.eu; })[0];
+    var jaMandei = S.enviado || (meu && meu.rodada === sala.i);
+    html += jaMandei
+      ? '<div class="panel" style="text-align:center"><p class="note">Palpite enviado</p>' +
+        '<div class="code" style="font-size:36px;letter-spacing:0">' + nf.format(meu && meu.palpite != null ? meu.palpite : 0) + '</div>' +
+        '<button class="ghost" data-a="mudar" style="margin-top:12px;margin-bottom:0">Mudar palpite</button></div>'
+      : '<div class="panel"><label for="pv">Seu palpite</label>' +
+        '<input id="pv" class="guess" type="tel" inputmode="numeric" placeholder="0" value="' + esc(S.palpite) + '" data-foco>' +
+        '<button data-a="enviar" style="margin-bottom:0">Enviar palpite</button></div>';
+    var prontos = js.filter(function(j){ return j.rodada === sala.i; }).length;
+    html += '<div class="panel"><p class="note" style="margin-bottom:6px">' + prontos + ' de ' + js.length + ' já chutaram</p>' +
+      listaJog(js, 'palpite') + '</div>';
+    if(anfitriao) html += '<button class="burn" data-a="revelar" style="margin-bottom:0">Revelar resposta</button>';
+    return html;
+  }
+
+  html += '<div class="answer"><p class="note">Resposta</p><div class="v">' + nf.format(q.a) + '</div>' +
+    (q.u ? '<p class="note" style="margin-top:6px">' + esc(q.u) + '</p>' : '') + '</div>' +
+    '<div class="panel">' + linhasResultado(sala.resultado || []) + '</div>';
+  html += anfitriao
+    ? '<button data-a="proxima" style="margin-bottom:0">' + (sala.i + 1 >= sala.qs.length ? 'Ver placar final' : 'Próxima pergunta') + '</button>'
+    : '<p class="note" style="text-align:center">Esperando o anfitrião.</p>';
+  return html;
+}
+
+function telaLocal(){
+  var L = S.local;
+  if(L.fase === 'fim'){
+    return '<div class="panel"><h2>Placar final</h2>' + placar(L.jogadores) + '</div>' +
+      '<button data-a="local-denovo">Jogar de novo</button>' +
+      '<button class="ghost" data-a="inicio" style="margin-bottom:0">Sair</button>';
+  }
+  var q = Q[L.qs[L.i]];
+  var html = cartaPergunta(q, L.i, L.qs.length);
+  if(L.fase === 'palpite'){
+    var p = L.jogadores[L.vez];
+    html += '<div class="panel"><label>Vez de <strong style="color:#FFCE00;font-size:17px">' + esc(p.nome) + '</strong> — ' +
+      (L.vez + 1) + ' de ' + L.jogadores.length + '</label>' +
+      '<input id="pv" class="guess" type="tel" inputmode="numeric" placeholder="0" data-foco>' +
+      '<button data-a="local-enviar" style="margin-bottom:0">' +
+      (L.vez + 1 >= L.jogadores.length ? 'Revelar resposta' : 'Passar o celular') + '</button></div>';
+    html += '<div class="panel">' + L.jogadores.map(function(x, i){
+      return '<div class="row"><span class="dot' + (i < L.vez ? ' on' : '') + '"></span><span class="nm">' + esc(x.nome) +
+        '</span><span class="pts">' + x.pontos + '</span></div>';
+    }).join('') + '</div>';
+    return html;
+  }
+  html += '<div class="answer"><p class="note">Resposta</p><div class="v">' + nf.format(q.a) + '</div>' +
+    (q.u ? '<p class="note" style="margin-top:6px">' + esc(q.u) + '</p>' : '') + '</div>' +
+    '<div class="panel">' + linhasResultado(L.resultado) + '</div>' +
+    '<button data-a="local-proxima" style="margin-bottom:0">' + (L.i + 1 >= L.qs.length ? 'Ver placar final' : 'Próxima pergunta') + '</button>';
+  return html;
+}
+
+/* ---------- ações ---------- */
+app.addEventListener('click', function(ev){
+  var b = ev.target.closest('[data-a]');
+  if(!b) return;
+  var a = b.getAttribute('data-a'), v = b.getAttribute('data-v');
+
+  if(a === 'inicio'){ pararLoop(); S.tela='home'; S.papel=null; S.sala=null; S.codigo=''; S.local=null; S.enviado=false; S.palpite=''; pintar(true); return; }
+  if(a === 'criar-setup'){ S.modo='online'; S.tela='config'; pintar(true); return; }
+  if(a === 'local-setup'){ S.modo='local'; S.tela='config'; pintar(true); return; }
+  if(a === 'ir-entrar'){ S.tela='entrar'; pintar(true); return; }
+  if(a === 'ir-nomes'){ S.tela='nomes'; pintar(true); return; }
+  if(a === 'tema'){
+    var i = S.temas.indexOf(v);
+    if(i >= 0){ if(S.temas.length > 1) S.temas.splice(i,1); } else S.temas.push(v);
+    b.classList.toggle('on', S.temas.indexOf(v) >= 0);
+    return;
+  }
+  if(a === 'qtd'){
+    S.qtd = parseInt(v, 10);
+    Array.prototype.forEach.call(app.querySelectorAll('[data-a=qtd]'), function(x){
+      x.classList.toggle('on', parseInt(x.getAttribute('data-v'),10) === S.qtd);
+    });
+    return;
+  }
+  if(a === 'copiar'){
+    try{ navigator.clipboard.writeText(v); b.textContent = 'Link copiado'; setTimeout(function(){ b.textContent = 'Copiar link da sala'; }, 2000); }
+    catch(e){ aviso('Copie da barra de endereço: ' + v); }
+    return;
+  }
+  if(a === 'criar') return criarSala();
+  if(a === 'entrar') return entrarSala();
+  if(a === 'comecar') return comecar();
+  if(a === 'enviar') return enviarPalpite();
+  if(a === 'mudar'){ S.enviado = false; pintar(true); return; }
+  if(a === 'revelar') return revelar();
+  if(a === 'proxima') return proxima();
+  if(a === 'denovo') return denovo();
+  if(a === 'mais-nome'){ guardarNomes(); S.nomesLocais.push(''); pintar(true); return; }
+  if(a === 'local-comecar') return localComecar();
+  if(a === 'local-enviar') return localEnviar();
+  if(a === 'local-proxima') return localProxima();
+  if(a === 'local-denovo') return localDenovo();
+});
+app.addEventListener('keydown', function(ev){
+  if(ev.key === 'Enter' && ev.target.id === 'pv'){
+    ev.preventDefault();
+    if(S.tela === 'local') localEnviar(); else enviarPalpite();
+  }
+});
+app.addEventListener('input', function(ev){
+  if(ev.target.id === 'nome') S.nome = ev.target.value;
+  if(ev.target.id === 'cod'){ ev.target.value = ev.target.value.toUpperCase(); S.codigoIn = ev.target.value; }
+  if(ev.target.id === 'pv'){ ev.target.value = ev.target.value.replace(/[^\d]/g,''); S.palpite = ev.target.value; }
+  if(ev.target.classList.contains('ln')) S.nomesLocais[parseInt(ev.target.getAttribute('data-i'),10)] = ev.target.value;
+});
+function guardarNomes(){
+  Array.prototype.forEach.call(app.querySelectorAll('.ln'), function(x){
+    S.nomesLocais[parseInt(x.getAttribute('data-i'),10)] = x.value;
+  });
+}
+
+/* ---------- online ---------- */
+async function criarSala(){
+  var nome = (S.nome || '').trim();
+  if(!nome) return aviso('Digite seu nome para criar a sala.');
+  var codigo = rid(4), eu = rid(8);
+  var sala = { codigo:codigo, fase:'lobby', i:0, qs:sortear(S.temas, S.qtd), anfitriao:eu,
+               jogadores:{}, resultado:[] };
+  sala.jogadores[eu] = { nome:nome, pontos:0, rodada:-1 };
+  try{
+    await putSala(codigo, sala);
+  }catch(e){ return aviso('Não deu para falar com o servidor. Confira a URL do banco no arquivo.'); }
+  S.papel='anfitriao'; S.codigo=codigo; S.eu=eu; S.sala=sala; S.tela='sala'; S.enviado=false; S.palpite='';
+  iniciarLoop(); pintar(true);
+}
+async function entrarSala(){
+  var codigo = (S.codigoIn || '').trim().toUpperCase(), nome = (S.nome || '').trim();
+  if(codigo.length !== 4) return aviso('O código tem 4 letras.');
+  if(!nome) return aviso('Digite seu nome.');
+  var sala;
+  try{ sala = await getSala(codigo); }
+  catch(e){ return aviso('Não deu para falar com o servidor. Confira sua conexão.'); }
+  if(!sala) return aviso('Sala ' + codigo + ' não encontrada. Confira o código.');
+  var eu = rid(8);
+  try{ await putJog(codigo, eu, { nome:nome, pontos:0, rodada:-1 }); }
+  catch(e){ return aviso('Não deu para entrar na sala. Tente de novo.'); }
+  S.papel='jogador'; S.codigo=codigo; S.eu=eu; S.sala=sala; S.tela='sala'; S.enviado=false; S.palpite='';
+  iniciarLoop(); pintar(true);
+}
+function iniciarLoop(){ pararLoop(); S.timer = setInterval(sincronizar, 1500); sincronizar(); }
+function pararLoop(){ if(S.timer){ clearInterval(S.timer); S.timer = null; } }
+async function sincronizar(){
+  if(S.ocupado || !S.codigo) return;
+  S.ocupado = true;
+  try{
+    var sala = await getSala(S.codigo);
+    if(!sala) return;
+    var antes = S.sala;
+    if(antes && (antes.fase !== sala.fase || antes.i !== sala.i) && sala.fase === 'palpite'){
+      S.enviado = false; S.palpite = '';
+    }
+    S.sala = sala;
+    pintar(false);
+  }catch(e){ /* rede instável, tenta no próximo ciclo */ }
+  finally{ S.ocupado = false; }
+}
+async function comecar(){
+  var js = jogadores(S.sala), zerar = {};
+  js.forEach(function(j){ zerar['jogadores/' + j.id + '/pontos'] = 0; zerar['jogadores/' + j.id + '/rodada'] = -1; });
+  zerar.fase = 'palpite'; zerar.i = 0; zerar.resultado = [];
+  try{ await patchSala(S.codigo, zerar); }catch(e){ return aviso('Falha ao começar. Tente de novo.'); }
+  S.enviado = false; S.palpite = ''; sincronizar();
+}
+async function enviarPalpite(){
+  var el = app.querySelector('#pv');
+  var bruto = ((el ? el.value : S.palpite) || '').replace(/[^\d]/g,'');
+  if(bruto === '') return aviso('Digite um número.');
+  var v = parseInt(bruto, 10);
+  try{ await patchJog(S.codigo, S.eu, { rodada: S.sala.i, palpite: v }); }
+  catch(e){ return aviso('Não deu para enviar. Tente de novo.'); }
+  S.enviado = true; S.palpite = String(v); sincronizar(); pintar(true);
+}
+async function revelar(){
+  var sala = S.sala, q = Q[sala.qs[sala.i]], js = jogadores(sala);
+  var lista = js.map(function(j){ return { id:j.id, nome:j.nome, palpite: j.rodada === sala.i ? j.palpite : null }; });
+  var res = apurar(lista, q.a);
+  var upd = { fase:'revelacao', resultado:res };
+  res.forEach(function(r){
+    var j = js.filter(function(x){ return x.id === r.id; })[0];
+    upd['jogadores/' + r.id + '/pontos'] = (j ? (j.pontos||0) : 0) + r.pts;
+  });
+  try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao revelar. Tente de novo.'); }
+  sincronizar();
+}
+async function proxima(){
+  var sala = S.sala;
+  var upd;
+  if(sala.i + 1 >= sala.qs.length) upd = { fase:'fim' };
+  else {
+    upd = { fase:'palpite', i: sala.i + 1, resultado: [] };
+    jogadores(sala).forEach(function(j){ upd['jogadores/' + j.id + '/rodada'] = -1; });
+  }
+  try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao avançar. Tente de novo.'); }
+  S.enviado = false; S.palpite = ''; sincronizar();
+}
+async function denovo(){
+  var upd = { fase:'lobby', i:0, qs: sortear(S.temas, S.qtd), resultado: [] };
+  jogadores(S.sala).forEach(function(j){ upd['jogadores/' + j.id + '/pontos'] = 0; upd['jogadores/' + j.id + '/rodada'] = -1; });
+  try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao reiniciar.'); }
+  S.enviado = false; S.palpite = ''; sincronizar();
+}
+
+/* ---------- um aparelho ---------- */
+function localComecar(){
+  guardarNomes();
+  var ns = S.nomesLocais.map(function(n){ return n.trim(); }).filter(Boolean);
+  if(ns.length < 2) return aviso('Precisa de pelo menos 2 jogadores.');
+  S.local = { jogadores: ns.map(function(n){ return { nome:n, pontos:0, palpite:null }; }),
+              qs: sortear(S.temas, S.qtd), i:0, vez:0, fase:'palpite', resultado:[] };
+  S.tela = 'local'; pintar(true);
+}
+function localEnviar(){
+  var el = app.querySelector('#pv');
+  var bruto = ((el ? el.value : '') || '').replace(/[^\d]/g,'');
+  if(bruto === '') return aviso('Digite um número.');
+  var L = S.local;
+  L.jogadores[L.vez].palpite = parseInt(bruto, 10);
+  if(L.vez + 1 >= L.jogadores.length){
+    var q = Q[L.qs[L.i]];
+    var res = apurar(L.jogadores.map(function(p){ return { id:p.nome, nome:p.nome, palpite:p.palpite }; }), q.a);
+    res.forEach(function(r){
+      var p = L.jogadores.filter(function(x){ return x.nome === r.nome; })[0];
+      if(p) p.pontos += r.pts;
+    });
+    L.resultado = res; L.fase = 'revelacao';
+  } else L.vez++;
+  pintar(true);
+}
+function localProxima(){
+  var L = S.local;
+  if(L.i + 1 >= L.qs.length) L.fase = 'fim';
+  else { L.i++; L.vez = 0; L.fase = 'palpite'; L.jogadores.forEach(function(p){ p.palpite = null; }); }
+  pintar(true);
+}
+function localDenovo(){
+  var L = S.local;
+  L.qs = sortear(S.temas, S.qtd); L.i = 0; L.vez = 0; L.fase = 'palpite';
+  L.jogadores.forEach(function(p){ p.pontos = 0; p.palpite = null; });
+  pintar(true);
+}
+
+/* ---------- boot ---------- */
+window.onerror = function(msg){
+  app.innerHTML = '<div class="err">Algo quebrou: ' + esc(msg) + '</div><button onclick="location.reload()">Recarregar</button>';
+};
+var qs = new URLSearchParams(location.search);
+if(qs.get('sala')){ S.codigoIn = qs.get('sala').toUpperCase(); S.tela = 'entrar'; }
+pintar(true);
+</script>
+</body>
+</html>
