@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,12 +8,8 @@
 <style>
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0;background:#0C3328}
-  body{
-    color:#F1F7F0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    font-size:16px;line-height:1.45;
-    padding:16px 14px calc(30px + env(safe-area-inset-bottom));
-  }
+  body{color:#F1F7F0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;line-height:1.45;padding:16px 14px calc(30px + env(safe-area-inset-bottom))}
   .wrap{max-width:520px;margin:0 auto}
   .brand{display:flex;align-items:baseline;gap:9px;margin-bottom:16px}
   .logo{font-weight:800;font-size:23px;letter-spacing:-.03em;background:#FFCE00;color:#0A2A20;padding:5px 9px;border-radius:6px}
@@ -30,11 +25,14 @@
     padding:15px 16px;margin-bottom:9px;cursor:pointer;-webkit-appearance:none;background:#FFCE00;color:#0A2A20}
   button.ghost{background:transparent;color:#F1F7F0;border:1px solid rgba(241,247,240,.16)}
   button.burn{background:#FF5A36;color:#fff}
+  button.small{font-size:14px;padding:11px 12px}
   button:disabled{opacity:.45}
-  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
   .chip{width:auto;font-size:13px;font-weight:600;padding:8px 13px;border-radius:999px;margin:0;
     background:transparent;color:#F1F7F0;border:1px solid rgba(241,247,240,.16)}
   .chip.on{background:#FFCE00;color:#0A2A20;border-color:#FFCE00}
+  .mini{width:auto;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;margin:0 7px 10px 0;
+    background:transparent;color:#8FB5A4;border:1px solid rgba(241,247,240,.16)}
   .code{font-weight:800;font-size:50px;letter-spacing:.14em;color:#FFCE00;line-height:1.1}
   .qcard{background:#FFCE00;color:#0A2A20;border-radius:14px;padding:18px 16px 20px;margin-bottom:12px}
   .qcard .q{font-weight:800;font-size:24px;line-height:1.12;letter-spacing:-.02em}
@@ -70,7 +68,7 @@
 
 <script>
 /* ===================================================================
-   1. COLE AQUI A URL DO SEU BANCO FIREBASE (veja o README)
+   COLE AQUI A URL DO SEU BANCO FIREBASE PARA LIGAR A SALA ONLINE
    Exemplo: https://no-limite-abc12-default-rtdb.firebaseio.com
    =================================================================== */
 var DB_URL = "";
@@ -86,7 +84,17 @@ var RAW = [
 ["Geografia","Qual a profundidade máxima da Fossa das Marianas?",10935,"metros"],
 ["Geografia","Quantos km tem a Muralha da China somando todos os trechos?",21196,"km"],
 ["Geografia","Quantos estados tem os Estados Unidos?",50,""],
-["Geografia","Qual a altura da queda Horseshoe, nas Cataratas do Niágara?",51,"metros"],
+["Geografia","Quantos países existem no continente africano?",54,""],
+["Geografia","Quantos países são membros da ONU?",193,""],
+["Geografia","Qual a altura do Monte Kilimanjaro?",5895,"metros"],
+["Geografia","Quantos metros abaixo do nível do mar fica o Mar Morto?",430,"metros"],
+["Geografia","Quantos países fazem fronteira com a China?",14,""],
+["Geografia","Quantos fusos horários tem a Rússia?",11,""],
+["Geografia","Qual a altura da Garganta do Diabo, nas Cataratas do Iguaçu?",80,"metros"],
+["Geografia","Quantos países existem na América Central?",7,""],
+["Geografia","Quantos km tem o Canal do Panamá?",82,"km"],
+["Geografia","Qual a altura do Monte Fuji?",3776,"metros"],
+["Geografia","A que altitude fica o Lago Titicaca?",3812,"metros"],
 ["História","Em que ano os portugueses chegaram ao Brasil?",1500,""],
 ["História","Em que ano foi proclamada a República no Brasil?",1889,""],
 ["História","Em que ano acabou a Segunda Guerra Mundial?",1945,""],
@@ -99,17 +107,40 @@ var RAW = [
 ["História","Em que ano começou a Primeira Guerra Mundial?",1914,""],
 ["História","Em que ano Brasília foi inaugurada como capital?",1960,""],
 ["História","Em que ano começou a ditadura militar no Brasil?",1964,""],
+["História","Em que ano caiu o Império Romano do Ocidente?",476,""],
+["História","Em que ano começou a Revolução Francesa?",1789,""],
+["História","Em que ano o Brasil declarou independência?",1822,""],
+["História","Em que ano Colombo chegou às Américas?",1492,""],
+["História","Em que ano a União Soviética deixou de existir?",1991,""],
+["História","Quantos anos durou a Segunda Guerra Mundial?",6,"anos"],
+["História","Em que ano Abraham Lincoln foi assassinado?",1865,""],
+["História","Em que ano começou a Guerra do Paraguai?",1864,""],
+["História","Em que ano Santos Dumont voou com o 14-Bis?",1906,""],
+["História","Em que ano os irmãos Wright fizeram o primeiro voo?",1903,""],
 ["Futebol","Quantas Copas do Mundo o Brasil já ganhou?",5,""],
 ["Futebol","Quantos gols Pelé marcou pela Seleção em jogos oficiais?",77,"gols"],
 ["Futebol","Em que ano o Brasil ganhou a primeira Copa do Mundo?",1958,""],
 ["Futebol","Quantas Champions League o Real Madrid tinha até 2025?",15,""],
 ["Futebol","Quantas Bolas de Ouro Messi já ganhou?",8,""],
 ["Futebol","Quantas Libertadores o São Paulo tem?",3,""],
+["Futebol","Quantas Libertadores o Grêmio tem?",3,""],
 ["Futebol","Quantas edições da Copa do Mundo aconteceram até 2022?",22,""],
 ["Futebol","Quantos minutos tem uma partida sem acréscimos?",90,"minutos"],
 ["Futebol","Em que ano o Brasil sediou a Copa do Mundo pela segunda vez?",2014,""],
 ["Futebol","Qual o comprimento máximo de um campo oficial?",105,"metros"],
 ["Futebol","Quantos gols o Brasil tomou da Alemanha em 2014?",7,"gols"],
+["Futebol","Quantos metros separam a marca do pênalti da linha do gol?",11,"metros"],
+["Futebol","Quantos centímetros de altura tem um gol oficial?",244,"centímetros"],
+["Futebol","Quantas Copas do Mundo a Itália ganhou?",4,""],
+["Futebol","Quantas Copas do Mundo a Alemanha ganhou?",4,""],
+["Futebol","Quantas Copas do Mundo a Argentina ganhou?",3,""],
+["Futebol","Em que ano o Maracanã foi inaugurado?",1950,""],
+["Futebol","Quantos clubes disputam a Série A do Brasileirão?",20,""],
+["Futebol","Quantas rodadas tem o Brasileirão em pontos corridos?",38,"rodadas"],
+["Futebol","Quantos minutos tem cada tempo da prorrogação?",15,"minutos"],
+["Futebol","Em que ano Messi ganhou a Copa do Mundo?",2022,""],
+["Futebol","Quantos Mundiais Interclubes o Santos conquistou?",2,""],
+["Futebol","Quantos títulos brasileiros o Palmeiras tinha até 2023?",12,""],
 ["Cinema e TV","Quantos Oscars o filme Titanic ganhou?",11,""],
 ["Cinema e TV","Quantos minutos dura o filme Titanic?",194,"minutos"],
 ["Cinema e TV","Quantos filmes tem a saga Harry Potter no cinema?",8,""],
@@ -122,6 +153,18 @@ var RAW = [
 ["Cinema e TV","Quantos episódios tem Breaking Bad?",62,"episódios"],
 ["Cinema e TV","Em que ano estreou o primeiro filme de Star Wars?",1977,""],
 ["Cinema e TV","Quantos minutos dura O Poderoso Chefão?",175,"minutos"],
+["Cinema e TV","Quantos Oscars O Retorno do Rei ganhou?",11,""],
+["Cinema e TV","Quantas temporadas tem The Office americano?",9,""],
+["Cinema e TV","Em que ano estreou Os Simpsons?",1989,""],
+["Cinema e TV","Em que ano estreou Cidade de Deus?",2002,""],
+["Cinema e TV","Em que ano estreou Tropa de Elite?",2007,""],
+["Cinema e TV","Quantos minutos dura Interestelar?",169,"minutos"],
+["Cinema e TV","Quantos Oscars Ben-Hur ganhou?",11,""],
+["Cinema e TV","Em que ano estreou Jurassic Park?",1993,""],
+["Cinema e TV","Quantas temporadas tem La Casa de Papel?",5,""],
+["Cinema e TV","Em que ano estreou o primeiro Shrek?",2001,""],
+["Cinema e TV","Quantos filmes tem a trilogia O Senhor dos Anéis?",3,""],
+["Cinema e TV","Quantas temporadas tem Stranger Things?",5,""],
 ["Música","Quantas teclas tem um piano padrão?",88,"teclas"],
 ["Música","Quantas cordas tem um violão comum?",6,""],
 ["Música","Em que ano os Beatles anunciaram o fim da banda?",1970,""],
@@ -129,18 +172,44 @@ var RAW = [
 ["Música","Quantos segundos dura Bohemian Rhapsody?",355,"segundos"],
 ["Música","Em que ano aconteceu o primeiro Rock in Rio?",1985,""],
 ["Música","Em que ano nasceu o rei Roberto Carlos?",1941,""],
-["Ciência","Quantos ossos tem o corpo humano adulto?",206,"ossos"],
-["Ciência","Quantos dentes tem um adulto com a arcada completa?",32,"dentes"],
+["Música","Quantas cordas tem um baixo comum?",4,""],
+["Música","Quantas teclas pretas tem um piano padrão?",36,"teclas"],
+["Música","Em que ano Michael Jackson nasceu?",1958,""],
+["Música","Em que ano Michael Jackson morreu?",2009,""],
+["Música","Quantas faixas tem o álbum Abbey Road?",17,"faixas"],
+["Música","Em que ano o Spotify foi lançado?",2008,""],
+["Música","Quantas notas tem uma oitava no piano contando as pretas?",12,"notas"],
+["Música","Em que ano Elvis Presley morreu?",1977,""],
+["Música","Quantas cordas tem uma harpa de concerto?",47,"cordas"],
 ["Ciência","Quantos elementos tem a tabela periódica atual?",118,""],
 ["Ciência","Quantos cromossomos tem uma célula humana?",46,""],
 ["Ciência","Quantos km por segundo a luz percorre no vácuo?",299792,"km/s"],
-["Ciência","Quantos planetas tem o Sistema Solar?",8,""],
-["Ciência","Quantas luas tem Marte?",2,""],
-["Ciência","Qual a distância média entre a Terra e a Lua?",384400,"km"],
-["Ciência","Quantos litros de sangue tem em média um adulto?",5,"litros"],
-["Ciência","Quantos dias a Terra leva para dar uma volta no Sol?",365,"dias"],
-["Ciência","Quantas câmaras tem o coração humano?",4,""],
+["Ciência","A que temperatura a água ferve ao nível do mar?",100,"graus"],
 ["Ciência","Quantos graus tem a soma dos ângulos de um triângulo?",180,"graus"],
+["Ciência","Qual o número atômico do ouro?",79,""],
+["Ciência","Qual a velocidade do som no ar?",343,"metros por segundo"],
+["Ciência","Quantos litros cabem em um metro cúbico?",1000,"litros"],
+["Ciência","Quantos gases nobres existem na tabela periódica?",6,""],
+["Ciência","Quantos graus tem um círculo completo?",360,"graus"],
+["Ciência","Quantos pares de cromossomos tem o ser humano?",23,"pares"],
+["Ciência","Em quantos graus Fahrenheit a água ferve?",212,"graus"],
+["Ciência","Quantos gramas pesa um litro de água?",1000,"gramas"],
+["Ciência","Quantas fases tem a mitose?",4,"fases"],
+["Ciência","Quantos tipos sanguíneos existem no sistema ABO?",4,""],
+["Corpo humano","Quantos ossos tem o corpo humano adulto?",206,"ossos"],
+["Corpo humano","Quantos dentes tem um adulto com a arcada completa?",32,"dentes"],
+["Corpo humano","Quantos litros de sangue tem em média um adulto?",5,"litros"],
+["Corpo humano","Quantas câmaras tem o coração humano?",4,""],
+["Corpo humano","Quantos ossos tem uma das mãos?",27,"ossos"],
+["Corpo humano","Quantos ossos tem um dos pés?",26,"ossos"],
+["Corpo humano","Quantos dentes de leite tem uma criança?",20,"dentes"],
+["Corpo humano","Quantos metros tem o intestino delgado?",6,"metros"],
+["Corpo humano","Quantas costelas tem o corpo humano?",24,"costelas"],
+["Corpo humano","Quantas vértebras tem a coluna de um bebê?",33,"vértebras"],
+["Corpo humano","Quantos batimentos por minuto tem um adulto em repouso?",70,"batimentos"],
+["Corpo humano","Quantos dias vive uma hemácia?",120,"dias"],
+["Corpo humano","Com quantos ossos um bebê nasce?",300,"ossos"],
+["Corpo humano","Quantos dias dura uma gestação humana?",280,"dias"],
 ["Animais","Quantos corações tem um polvo?",3,""],
 ["Animais","Quantas patas tem uma aranha?",8,""],
 ["Animais","Qual a velocidade máxima do guepardo?",120,"km/h"],
@@ -149,6 +218,16 @@ var RAW = [
 ["Animais","Quantas vértebras tem o pescoço de uma girafa?",7,""],
 ["Animais","Quantos dias dura a gestação de uma elefanta?",660,"dias"],
 ["Animais","Quantos ovos uma galinha poedeira põe por ano?",300,"ovos"],
+["Animais","Quantas patas tem um inseto?",6,""],
+["Animais","Quantos dentes tem um cachorro adulto?",42,"dentes"],
+["Animais","Quantos dentes tem um gato adulto?",30,"dentes"],
+["Animais","A que velocidade o falcão-peregrino mergulha?",390,"km/h"],
+["Animais","Quantas espécies de pinguim existem?",18,""],
+["Animais","Quantos metros um canguru consegue saltar de uma vez?",9,"metros"],
+["Animais","Quantos olhos tem uma abelha?",5,""],
+["Animais","Quantas asas tem uma abelha?",4,""],
+["Animais","Quantos anos vive um elefante em média?",70,"anos"],
+["Animais","Quantos litros de leite uma vaca leiteira dá por dia?",30,"litros"],
 ["Brasil","Quantos municípios tem o Brasil?",5570,"municípios"],
 ["Brasil","Quantos estados tem o Brasil sem contar o Distrito Federal?",26,""],
 ["Brasil","Quantos senadores compõem o Senado Federal?",81,""],
@@ -157,6 +236,18 @@ var RAW = [
 ["Brasil","Quantos metros tem a estátua do Cristo Redentor sem o pedestal?",30,"metros"],
 ["Brasil","Quantas letras tem o alfabeto da língua portuguesa?",26,"letras"],
 ["Brasil","Quantos ministros tem o Supremo Tribunal Federal?",11,""],
+["Brasil","Quantos estados tem a região Nordeste?",9,""],
+["Brasil","Quantos estados tem a região Norte?",7,""],
+["Brasil","Quantos estados tem a região Sudeste?",4,""],
+["Brasil","Quantos estados tem a região Sul?",3,""],
+["Brasil","Quantos anos dura o mandato de um senador?",8,"anos"],
+["Brasil","Em que ano foi promulgada a Constituição atual?",1988,""],
+["Brasil","Quantas capitais estaduais o Brasil tem contando Brasília?",27,""],
+["Brasil","Qual a altura do Pico da Neblina, o ponto mais alto do Brasil?",2995,"metros"],
+["Brasil","Quantos km tem o litoral brasileiro?",7491,"km"],
+["Brasil","Em que ano o Brasil sediou os Jogos Olímpicos?",2016,""],
+["Brasil","Em que ano a Petrobras foi fundada?",1953,""],
+["Brasil","Quantos milhões de habitantes o Censo 2022 contou no Brasil?",203,"milhões"],
 ["Tecnologia","Em que ano o Google foi fundado?",1998,""],
 ["Tecnologia","Em que ano foi lançado o primeiro iPhone?",2007,""],
 ["Tecnologia","Em que ano o Facebook foi criado?",2004,""],
@@ -166,6 +257,17 @@ var RAW = [
 ["Tecnologia","Em que ano o ChatGPT foi lançado ao público?",2022,""],
 ["Tecnologia","Quantos bits tem um byte?",8,"bits"],
 ["Tecnologia","Em que ano o Instagram foi lançado?",2010,""],
+["Tecnologia","Em que ano o WhatsApp foi criado?",2009,""],
+["Tecnologia","Em que ano o TikTok chegou ao mercado internacional?",2017,""],
+["Tecnologia","Em que ano a Apple foi fundada?",1976,""],
+["Tecnologia","Em que ano a Amazon foi fundada?",1994,""],
+["Tecnologia","Quantos megabytes tem um gigabyte?",1024,"MB"],
+["Tecnologia","Em que ano a World Wide Web foi criada?",1989,""],
+["Tecnologia","Em que ano o Orkut foi lançado?",2004,""],
+["Tecnologia","Em que ano o Twitter foi criado?",2006,""],
+["Tecnologia","Quantos caracteres cabem em um tweet hoje?",280,"caracteres"],
+["Tecnologia","Em que ano o Pix entrou em funcionamento?",2020,""],
+["Tecnologia","Em que ano o primeiro e-mail da história foi enviado?",1971,""],
 ["Esportes","Quantos jogadores de um time ficam em quadra no vôlei?",6,""],
 ["Esportes","Quantos buracos tem um campo de golfe oficial?",18,"buracos"],
 ["Esportes","Quantas voltas tem a corrida das 500 Milhas de Indianápolis?",200,"voltas"],
@@ -174,6 +276,58 @@ var RAW = [
 ["Esportes","Quantos pontos vale um touchdown no futebol americano?",6,"pontos"],
 ["Esportes","Qual a altura da cesta de basquete oficial?",305,"centímetros"],
 ["Esportes","Quantos títulos mundiais de F1 Ayrton Senna conquistou?",3,""],
+["Esportes","Quantos pontos são necessários para vencer um set de vôlei?",25,"pontos"],
+["Esportes","Quantos jogadores de um time ficam em quadra no basquete?",5,""],
+["Esportes","Quantos minutos tem um jogo da NBA?",48,"minutos"],
+["Esportes","Quantos rounds tem uma luta de boxe pelo título?",12,"rounds"],
+["Esportes","Quantos minutos tem um round do UFC?",5,"minutos"],
+["Esportes","Quantos games são necessários para vencer um set no tênis?",6,"games"],
+["Esportes","Em que ano foram as primeiras Olimpíadas modernas?",1896,""],
+["Esportes","Quantos títulos da NBA Michael Jordan conquistou?",6,""],
+["Esportes","Quantos metros tem uma maratona?",42195,"metros"],
+["Esportes","Quantos jogadores de um time ficam em quadra no handebol?",7,""],
+["Esportes","Quantos títulos mundiais de F1 Michael Schumacher tem?",7,""],
+["Esportes","Em que ano Ayrton Senna morreu?",1994,""],
+["Comida e bebida","Quantas calorias tem um Big Mac?",550,"kcal"],
+["Comida e bebida","Quantos ml tem uma lata de refrigerante?",350,"ml"],
+["Comida e bebida","Quantos ml tem uma cerveja long neck?",355,"ml"],
+["Comida e bebida","Quantos graus de álcool tem uma cachaça em média?",40,"graus"],
+["Comida e bebida","Quantos graus de álcool tem uma cerveja Pilsen comum?",5,"graus"],
+["Comida e bebida","Quantas calorias tem uma banana?",100,"kcal"],
+["Comida e bebida","Quantos litros tem um barril de chope padrão?",50,"litros"],
+["Comida e bebida","Em que ano a Coca-Cola foi criada?",1886,""],
+["Comida e bebida","Quantos gramas de café vão em um espresso?",7,"gramas"],
+["Comida e bebida","Quantas fatias tem uma pizza grande tradicional?",8,"fatias"],
+["Comida e bebida","Quantos minutos leva para deixar um ovo cozido duro?",10,"minutos"],
+["Comida e bebida","Quantas calorias tem 100 gramas de arroz cozido?",130,"kcal"],
+["Comida e bebida","Quantos gramas tem uma xícara de açúcar?",200,"gramas"],
+["Comida e bebida","Quantos ml tem uma taça de vinho servida em restaurante?",150,"ml"],
+["Espaço","Quantas luas de Júpiter estavam confirmadas em 2023?",95,"luas"],
+["Espaço","Quantas luas de Saturno estavam confirmadas em 2023?",146,"luas"],
+["Espaço","Quantos minutos a luz do Sol leva para chegar à Terra?",8,"minutos"],
+["Espaço","Quantos dias terrestres dura um ano em Marte?",687,"dias"],
+["Espaço","Quantos dias terrestres dura um dia em Vênus?",243,"dias"],
+["Espaço","Qual o diâmetro da Terra?",12742,"km"],
+["Espaço","Qual o diâmetro da Lua?",3475,"km"],
+["Espaço","Quantas pessoas já pisaram na Lua?",12,""],
+["Espaço","Em que ano o Sputnik foi lançado?",1957,""],
+["Espaço","Em que ano Yuri Gagarin foi ao espaço?",1961,""],
+["Espaço","Quantas constelações oficiais existem?",88,""],
+["Espaço","Qual a temperatura da superfície de Vênus?",465,"graus"],
+["Espaço","Qual a distância média entre a Terra e a Lua?",384400,"km"],
+["Espaço","Em que ano começou a montagem da Estação Espacial Internacional?",1998,""],
+["Games","Em que ano a Nintendo foi fundada?",1889,""],
+["Games","Em que ano o Super Mario Bros foi lançado?",1985,""],
+["Games","Em que ano o Minecraft foi lançado oficialmente?",2011,""],
+["Games","Em que ano o primeiro PlayStation foi lançado?",1994,""],
+["Games","Em que ano o Pac-Man foi lançado?",1980,""],
+["Games","Quantas peças diferentes tem o Tetris?",7,"peças"],
+["Games","Em que ano o Fortnite foi lançado?",2017,""],
+["Games","Em que ano o GTA V foi lançado?",2013,""],
+["Games","Quantos Pokémon existiam na primeira geração?",151,""],
+["Games","Em que ano o Counter-Strike foi lançado?",1999,""],
+["Games","Em que ano o primeiro Xbox foi lançado?",2001,""],
+["Games","Quantos jogadores entram em uma partida de Fortnite?",100,"jogadores"],
 ["Curiosidades","Quantas listras tem a bandeira dos Estados Unidos?",13,"listras"],
 ["Curiosidades","Quantos degraus tem a Torre Eiffel até o topo?",1665,"degraus"],
 ["Curiosidades","Qual a altura da Torre Eiffel com a antena?",330,"metros"],
@@ -181,9 +335,21 @@ var RAW = [
 ["Curiosidades","Quantas peças tem um jogo de xadrez no início da partida?",32,"peças"],
 ["Curiosidades","Quantas cartas tem um baralho sem os coringas?",52,"cartas"],
 ["Curiosidades","Quantos segundos tem um dia?",86400,"segundos"],
-["Curiosidades","Quantas calorias tem um Big Mac?",550,"kcal"],
 ["Curiosidades","Quantos anéis tem o símbolo olímpico?",5,"anéis"],
-["Curiosidades","Quantos quilos pesa o troféu da Copa do Mundo?",6,"quilos"]
+["Curiosidades","Quantos quilos pesa o troféu da Copa do Mundo?",6,"quilos"],
+["Curiosidades","Quantos pinos são derrubados numa jogada perfeita de boliche?",10,"pinos"],
+["Curiosidades","Quantas casas tem um tabuleiro de xadrez?",64,"casas"],
+["Curiosidades","Quantas cores tem o arco-íris?",7,"cores"],
+["Curiosidades","Quantos minutos tem uma semana?",10080,"minutos"],
+["Curiosidades","Quantas horas tem um ano comum?",8760,"horas"],
+["Curiosidades","Quantos degraus tem a Estátua da Liberdade até a coroa?",354,"degraus"],
+["Curiosidades","Quantos andares tem o Empire State Building?",102,"andares"],
+["Curiosidades","Quantas línguas oficiais tem a ONU?",6,""],
+["Curiosidades","Quantos metros tem uma milha?",1609,"metros"],
+["Curiosidades","Quantos quilos tem uma tonelada?",1000,"quilos"],
+["Curiosidades","Quantos zeros tem um bilhão?",9,"zeros"],
+["Curiosidades","Quantos países participaram da primeira Copa do Mundo?",13,""],
+["Curiosidades","Quantas teclas tem um teclado ABNT2?",107,"teclas"]
 ];
 var Q = RAW.map(function(r,i){ return {id:i, t:r[0], q:r[1], a:r[2], u:r[3]}; });
 var TEMAS = Q.map(function(x){return x.t;}).filter(function(v,i,s){return s.indexOf(v)===i;});
@@ -194,7 +360,7 @@ function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&a
 function rid(n){ var o='',c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; for(var i=0;i<n;i++) o+=c[Math.floor(Math.random()*c.length)]; return o; }
 
 var S = {
-  tela:'home', erro:'', nome:'', codigoIn:'',
+  tela:'home', modo:'online', erro:'', nome:'', codigoIn:'',
   temas:TEMAS.slice(), qtd:10,
   papel:null, codigo:'', eu:'', sala:null,
   palpite:'', enviado:false,
@@ -216,14 +382,15 @@ var putSala   = function(c, d){ return req(urlSala(c), 'PUT', d); };
 var patchSala = function(c, d){ return req(urlSala(c), 'PATCH', d); };
 var putJog    = function(c, id, d){ return req(urlSala(c, '/jogadores/' + id), 'PUT', d); };
 var patchJog  = function(c, id, d){ return req(urlSala(c, '/jogadores/' + id), 'PATCH', d); };
-
 var online = function(){ return !!DB_URL && DB_URL.indexOf('http') === 0; };
 
-/* ---------- regras ---------- */
+/* ---------- regras ----------
+   O baralho da partida sai sempre embaralhado e leva 25 perguntas de reserva
+   além do tamanho escolhido, para dar conta dos "pular".                      */
 function sortear(temas, n){
   var pool = Q.filter(function(x){ return temas.indexOf(x.t) >= 0; }).map(function(x){ return x.id; });
   for(var i = pool.length - 1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
-  return pool.slice(0, Math.min(n, pool.length));
+  return pool.slice(0, Math.min(n + 25, pool.length));
 }
 function apurar(lista, resposta){
   var melhor = null;
@@ -248,12 +415,18 @@ function jogadores(sala){
     return { id:k, nome:j.nome || 'Jogador', pontos:j.pontos || 0, rodada: j.rodada, palpite: j.palpite };
   }).sort(function(a,b){ return (a.nome||'').localeCompare(b.nome||''); });
 }
+function todosPalpitaram(sala, js){
+  if(!js.length) return false;
+  for(var i=0;i<js.length;i++){ if(js[i].rodada !== sala.i) return false; }
+  return true;
+}
 
 /* ---------- render ---------- */
 function assinatura(){
+  if(S.tela === 'local' && S.local) return 'local|' + S.local.fase + '|' + S.local.i + '|' + S.local.vez + '|' + S.erro;
   if(S.tela !== 'sala' || !S.sala) return S.tela + '|' + S.erro;
   var js = jogadores(S.sala);
-  return ['sala', S.sala.fase, S.sala.i, S.enviado ? 1 : 0, js.length,
+  return ['sala', S.sala.fase, S.sala.i, S.sala.rodada, S.enviado ? 1 : 0, js.length,
           js.filter(function(j){ return j.rodada === S.sala.i; }).length, S.erro].join('|');
 }
 function pintar(forcar){
@@ -275,11 +448,15 @@ function chipsHTML(){
   var t = TEMAS.map(function(x){
     return '<button class="chip' + (S.temas.indexOf(x)>=0 ? ' on' : '') + '" data-a="tema" data-v="' + esc(x) + '">' + esc(x) + '</button>';
   }).join('');
-  var n = [5,10,15,20].map(function(x){
+  var n = [5,10,15,20,30].map(function(x){
     return '<button class="chip' + (S.qtd===x ? ' on' : '') + '" data-a="qtd" data-v="' + x + '">' + x + ' perguntas</button>';
   }).join('');
+  var disp = Q.filter(function(x){ return S.temas.indexOf(x.t) >= 0; }).length;
   return '<label>Temas</label><div class="chips">' + t + '</div>' +
-         '<label>Tamanho da partida</label><div class="chips">' + n + '</div>';
+    '<button class="mini" data-a="todos-temas">Marcar todos</button>' +
+    '<button class="mini" data-a="limpar-temas">Deixar só um</button>' +
+    '<p class="note" style="margin-bottom:14px">' + disp + ' perguntas disponíveis nos temas escolhidos</p>' +
+    '<label>Tamanho da partida</label><div class="chips" style="margin-bottom:14px">' + n + '</div>';
 }
 function listaJog(js, fase){
   return js.map(function(j){
@@ -294,7 +471,8 @@ function linhasResultado(res){
   var r = res.slice().sort(function(a,b){
     if(a.palpite == null) return 1; if(b.palpite == null) return -1; return b.palpite - a.palpite;
   });
-  var teve = r.some(function(x){ return x.ganhou; });
+  var teve = false;
+  r.forEach(function(x){ if(x.ganhou) teve = true; });
   return r.map(function(x){
     var tag = x.mosca ? '<span class="tag bull">na mosca +2</span>'
             : x.ganhou ? '<span class="tag win">+1</span>'
@@ -310,14 +488,17 @@ function placar(js){
       '<span style="font-size:17px">' + esc(j.nome) + '</span><span class="pts">' + (j.pontos||0) + '</span></div>';
   }).join('');
 }
-function cartaPergunta(q, i, total){
-  return '<div class="meta"><span>Pergunta ' + (i+1) + ' de ' + total + '</span><span>' + esc(q.t) + '</span></div>' +
+function cartaPergunta(q, rodada, total){
+  return '<div class="meta"><span>Pergunta ' + rodada + ' de ' + total + '</span><span>' + esc(q.t) + '</span></div>' +
     '<div class="qcard"><div class="q">' + esc(q.q) + '</div>' +
     (q.u ? '<div class="u">Responda em ' + esc(q.u) + '</div>' : '') + '</div>';
 }
+function caixaResposta(q){
+  return '<div class="answer"><p class="note">Resposta</p><div class="v">' + nf.format(q.a) + '</div>' +
+    (q.u ? '<p class="note" style="margin-top:6px">' + esc(q.u) + '</p>' : '') + '</div>';
+}
 
 function tela(){
-  if(S.tela === 'home') return telaHome();
   if(S.tela === 'config') return telaConfig();
   if(S.tela === 'entrar') return telaEntrar();
   if(S.tela === 'nomes') return telaNomes();
@@ -331,11 +512,12 @@ function telaHome(){
     'Todo mundo chuta um número. Leva o ponto quem chegar mais perto sem ultrapassar. Passou da resposta, queimou. ' +
     'Cravou o número exato, vale 2 pontos.</p></div>' +
     '<div class="panel"><h2>Cada um no seu celular</h2>' +
-      (online() ? '' : '<p class="note" style="margin-bottom:12px">A sala online ainda não foi configurada neste site. Veja o README do repositório.</p>') +
+      (online() ? '' : '<p class="note" style="margin-bottom:12px">A sala online ainda não foi ligada neste site. Falta configurar o banco de dados.</p>') +
       '<button data-a="criar-setup"' + (online() ? '' : ' disabled') + '>Criar sala</button>' +
       '<button class="ghost" data-a="ir-entrar"' + (online() ? '' : ' disabled') + ' style="margin-bottom:0">Entrar com código</button></div>' +
     '<div class="panel"><h2>Um celular só</h2><p class="note" style="margin-bottom:12px">Passa o aparelho de mão em mão. Não depende de conexão.</p>' +
-      '<button class="ghost" data-a="local-setup" style="margin-bottom:0">Jogar em um aparelho</button></div>';
+      '<button class="ghost" data-a="local-setup" style="margin-bottom:0">Jogar em um aparelho</button></div>' +
+    '<p class="note" style="text-align:center">' + Q.length + ' perguntas em ' + TEMAS.length + ' temas</p>';
 }
 function telaConfig(){
   var pedeNome = S.modo === 'online';
@@ -365,10 +547,11 @@ function telaNomes(){
     '<button class="ghost" data-a="inicio" style="margin-bottom:0">Voltar</button></div>';
 }
 
+/* ---------- sala online ---------- */
 function telaSala(){
   if(!S.sala) return '<div class="panel"><p class="note">Conectando na sala ' + esc(S.codigo) + '…</p></div>' +
     '<button class="ghost" data-a="inicio">Sair</button>';
-  var sala = S.sala, js = jogadores(sala), anfitriao = S.papel === 'anfitriao';
+  var sala = S.sala, js = jogadores(sala), chefe = S.papel === 'anfitriao';
 
   if(sala.fase === 'lobby'){
     var link = location.origin + location.pathname + '?sala=' + sala.codigo;
@@ -378,19 +561,20 @@ function telaSala(){
       '<button class="ghost" data-a="copiar" data-v="' + esc(link) + '" style="margin-top:12px;margin-bottom:0">Copiar link da sala</button></div>' +
       '<div class="panel"><p class="note" style="margin-bottom:8px">' + js.length + (js.length === 1 ? ' jogador na sala' : ' jogadores na sala') + '</p>' +
       listaJog(js, 'lobby') + '</div>' +
-      (anfitriao ? '<button data-a="comecar">Começar partida</button>'
-                 : '<p class="note" style="text-align:center">Esperando o anfitrião começar.</p>') +
+      (chefe ? '<button data-a="comecar">Começar partida</button>' +
+               '<button class="ghost small" data-a="embaralhar">Embaralhar perguntas</button>'
+             : '<p class="note" style="text-align:center">Esperando o anfitrião começar.</p>') +
       '<button class="ghost" data-a="inicio" style="margin-bottom:0">Sair da sala</button>';
   }
   if(sala.fase === 'fim'){
     return '<div class="panel"><h2>Placar final</h2>' + placar(js) + '</div>' +
-      (anfitriao ? '<button data-a="denovo">Jogar de novo</button>'
-                 : '<p class="note" style="text-align:center">O anfitrião pode começar outra partida.</p>') +
+      (chefe ? '<button data-a="denovo">Jogar de novo</button>'
+             : '<p class="note" style="text-align:center">O anfitrião pode começar outra partida.</p>') +
       '<button class="ghost" data-a="inicio" style="margin-bottom:0">Sair da sala</button>';
   }
 
   var q = Q[sala.qs[sala.i]];
-  var html = cartaPergunta(q, sala.i, sala.qs.length);
+  var html = cartaPergunta(q, sala.rodada, sala.total);
 
   if(sala.fase === 'palpite'){
     var meu = js.filter(function(j){ return j.id === S.eu; })[0];
@@ -402,22 +586,30 @@ function telaSala(){
       : '<div class="panel"><label for="pv">Seu palpite</label>' +
         '<input id="pv" class="guess" type="tel" inputmode="numeric" placeholder="0" value="' + esc(S.palpite) + '" data-foco>' +
         '<button data-a="enviar" style="margin-bottom:0">Enviar palpite</button></div>';
+
     var prontos = js.filter(function(j){ return j.rodada === sala.i; }).length;
-    html += '<div class="panel"><p class="note" style="margin-bottom:6px">' + prontos + ' de ' + js.length + ' já chutaram</p>' +
-      listaJog(js, 'palpite') + '</div>';
-    if(anfitriao) html += '<button class="burn" data-a="revelar" style="margin-bottom:0">Revelar resposta</button>';
+    var todos = todosPalpitaram(sala, js);
+    html += '<div class="panel"><p class="note" style="margin-bottom:6px">' + prontos + ' de ' + js.length +
+      ' já chutaram' + (todos ? ' — pode revelar' : '') + '</p>' + listaJog(js, 'palpite') + '</div>';
+
+    if(chefe){
+      html += '<button class="burn" data-a="revelar">Revelar resposta</button>' +
+              '<button class="ghost small" data-a="pular" style="margin-bottom:0">Pular esta pergunta</button>';
+    } else {
+      html += '<p class="note" style="text-align:center">' +
+        (todos ? 'Todos já chutaram. O anfitrião revela quando quiser.' : 'Esperando os outros palpites.') + '</p>';
+    }
     return html;
   }
 
-  html += '<div class="answer"><p class="note">Resposta</p><div class="v">' + nf.format(q.a) + '</div>' +
-    (q.u ? '<p class="note" style="margin-top:6px">' + esc(q.u) + '</p>' : '') + '</div>' +
-    '<div class="panel">' + linhasResultado(sala.resultado || []) + '</div>';
-  html += anfitriao
-    ? '<button data-a="proxima" style="margin-bottom:0">' + (sala.i + 1 >= sala.qs.length ? 'Ver placar final' : 'Próxima pergunta') + '</button>'
+  html += caixaResposta(q) + '<div class="panel">' + linhasResultado(sala.resultado || []) + '</div>';
+  html += chefe
+    ? '<button data-a="proxima" style="margin-bottom:0">' + (sala.rodada >= sala.total ? 'Ver placar final' : 'Próxima pergunta') + '</button>'
     : '<p class="note" style="text-align:center">Esperando o anfitrião.</p>';
   return html;
 }
 
+/* ---------- um aparelho ---------- */
 function telaLocal(){
   var L = S.local;
   if(L.fase === 'fim'){
@@ -426,28 +618,39 @@ function telaLocal(){
       '<button class="ghost" data-a="inicio" style="margin-bottom:0">Sair</button>';
   }
   var q = Q[L.qs[L.i]];
-  var html = cartaPergunta(q, L.i, L.qs.length);
+  var html = cartaPergunta(q, L.rodada, L.total);
+
   if(L.fase === 'palpite'){
     var p = L.jogadores[L.vez];
     html += '<div class="panel"><label>Vez de <strong style="color:#FFCE00;font-size:17px">' + esc(p.nome) + '</strong> — ' +
       (L.vez + 1) + ' de ' + L.jogadores.length + '</label>' +
       '<input id="pv" class="guess" type="tel" inputmode="numeric" placeholder="0" data-foco>' +
-      '<button data-a="local-enviar" style="margin-bottom:0">' +
-      (L.vez + 1 >= L.jogadores.length ? 'Revelar resposta' : 'Passar o celular') + '</button></div>';
+      '<button data-a="local-enviar">Confirmar e passar o celular</button>' +
+      '<button class="ghost small" data-a="local-pular" style="margin-bottom:0">Pular esta pergunta</button></div>';
     html += '<div class="panel">' + L.jogadores.map(function(x, i){
       return '<div class="row"><span class="dot' + (i < L.vez ? ' on' : '') + '"></span><span class="nm">' + esc(x.nome) +
         '</span><span class="pts">' + x.pontos + '</span></div>';
     }).join('') + '</div>';
     return html;
   }
-  html += '<div class="answer"><p class="note">Resposta</p><div class="v">' + nf.format(q.a) + '</div>' +
-    (q.u ? '<p class="note" style="margin-top:6px">' + esc(q.u) + '</p>' : '') + '</div>' +
-    '<div class="panel">' + linhasResultado(L.resultado) + '</div>' +
-    '<button data-a="local-proxima" style="margin-bottom:0">' + (L.i + 1 >= L.qs.length ? 'Ver placar final' : 'Próxima pergunta') + '</button>';
+
+  if(L.fase === 'pronto'){
+    html += '<div class="panel" style="text-align:center"><p class="note">Todo mundo já chutou. Revelem quando quiserem.</p></div>' +
+      '<div class="panel">' + L.jogadores.map(function(x){
+        return '<div class="row"><span class="dot on"></span><span class="nm">' + esc(x.nome) + '</span>' +
+          '<span class="pts">' + x.pontos + '</span></div>';
+      }).join('') + '</div>' +
+      '<button class="burn" data-a="local-revelar">Revelar resposta</button>' +
+      '<button class="ghost small" data-a="local-pular" style="margin-bottom:0">Pular esta pergunta</button>';
+    return html;
+  }
+
+  html += caixaResposta(q) + '<div class="panel">' + linhasResultado(L.resultado) + '</div>' +
+    '<button data-a="local-proxima" style="margin-bottom:0">' + (L.rodada >= L.total ? 'Ver placar final' : 'Próxima pergunta') + '</button>';
   return html;
 }
 
-/* ---------- ações ---------- */
+/* ---------- eventos ---------- */
 app.addEventListener('click', function(ev){
   var b = ev.target.closest('[data-a]');
   if(!b) return;
@@ -461,16 +664,11 @@ app.addEventListener('click', function(ev){
   if(a === 'tema'){
     var i = S.temas.indexOf(v);
     if(i >= 0){ if(S.temas.length > 1) S.temas.splice(i,1); } else S.temas.push(v);
-    b.classList.toggle('on', S.temas.indexOf(v) >= 0);
-    return;
+    pintar(true); return;
   }
-  if(a === 'qtd'){
-    S.qtd = parseInt(v, 10);
-    Array.prototype.forEach.call(app.querySelectorAll('[data-a=qtd]'), function(x){
-      x.classList.toggle('on', parseInt(x.getAttribute('data-v'),10) === S.qtd);
-    });
-    return;
-  }
+  if(a === 'todos-temas'){ S.temas = TEMAS.slice(); pintar(true); return; }
+  if(a === 'limpar-temas'){ S.temas = [TEMAS[0]]; pintar(true); return; }
+  if(a === 'qtd'){ S.qtd = parseInt(v, 10); pintar(true); return; }
   if(a === 'copiar'){
     try{ navigator.clipboard.writeText(v); b.textContent = 'Link copiado'; setTimeout(function(){ b.textContent = 'Copiar link da sala'; }, 2000); }
     catch(e){ aviso('Copie da barra de endereço: ' + v); }
@@ -479,14 +677,18 @@ app.addEventListener('click', function(ev){
   if(a === 'criar') return criarSala();
   if(a === 'entrar') return entrarSala();
   if(a === 'comecar') return comecar();
+  if(a === 'embaralhar') return embaralhar();
   if(a === 'enviar') return enviarPalpite();
   if(a === 'mudar'){ S.enviado = false; pintar(true); return; }
   if(a === 'revelar') return revelar();
+  if(a === 'pular') return pular();
   if(a === 'proxima') return proxima();
   if(a === 'denovo') return denovo();
   if(a === 'mais-nome'){ guardarNomes(); S.nomesLocais.push(''); pintar(true); return; }
   if(a === 'local-comecar') return localComecar();
   if(a === 'local-enviar') return localEnviar();
+  if(a === 'local-revelar') return localRevelar();
+  if(a === 'local-pular') return localPular();
   if(a === 'local-proxima') return localProxima();
   if(a === 'local-denovo') return localDenovo();
 });
@@ -513,12 +715,11 @@ async function criarSala(){
   var nome = (S.nome || '').trim();
   if(!nome) return aviso('Digite seu nome para criar a sala.');
   var codigo = rid(4), eu = rid(8);
-  var sala = { codigo:codigo, fase:'lobby', i:0, qs:sortear(S.temas, S.qtd), anfitriao:eu,
-               jogadores:{}, resultado:[] };
+  var sala = { codigo:codigo, fase:'lobby', i:0, rodada:1, total:S.qtd,
+               qs:sortear(S.temas, S.qtd), anfitriao:eu, jogadores:{}, resultado:[] };
   sala.jogadores[eu] = { nome:nome, pontos:0, rodada:-1 };
-  try{
-    await putSala(codigo, sala);
-  }catch(e){ return aviso('Não deu para falar com o servidor. Confira a URL do banco no arquivo.'); }
+  try{ await putSala(codigo, sala); }
+  catch(e){ return aviso('Não deu para falar com o servidor. Confira a URL do banco no arquivo.'); }
   S.papel='anfitriao'; S.codigo=codigo; S.eu=eu; S.sala=sala; S.tela='sala'; S.enviado=false; S.palpite='';
   iniciarLoop(); pintar(true);
 }
@@ -545,20 +746,23 @@ async function sincronizar(){
     var sala = await getSala(S.codigo);
     if(!sala) return;
     var antes = S.sala;
-    if(antes && (antes.fase !== sala.fase || antes.i !== sala.i) && sala.fase === 'palpite'){
-      S.enviado = false; S.palpite = '';
-    }
+    if(antes && antes.i !== sala.i){ S.enviado = false; S.palpite = ''; }
     S.sala = sala;
     pintar(false);
-  }catch(e){ /* rede instável, tenta no próximo ciclo */ }
+  }catch(e){ }
   finally{ S.ocupado = false; }
 }
 async function comecar(){
-  var js = jogadores(S.sala), zerar = {};
-  js.forEach(function(j){ zerar['jogadores/' + j.id + '/pontos'] = 0; zerar['jogadores/' + j.id + '/rodada'] = -1; });
-  zerar.fase = 'palpite'; zerar.i = 0; zerar.resultado = [];
-  try{ await patchSala(S.codigo, zerar); }catch(e){ return aviso('Falha ao começar. Tente de novo.'); }
+  var js = jogadores(S.sala), upd = {};
+  js.forEach(function(j){ upd['jogadores/' + j.id + '/pontos'] = 0; upd['jogadores/' + j.id + '/rodada'] = -1; });
+  upd.fase = 'palpite'; upd.i = 0; upd.rodada = 1; upd.total = S.qtd; upd.resultado = [];
+  try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao começar. Tente de novo.'); }
   S.enviado = false; S.palpite = ''; sincronizar();
+}
+async function embaralhar(){
+  try{ await patchSala(S.codigo, { qs: sortear(S.temas, S.qtd), i:0, rodada:1, total:S.qtd }); }
+  catch(e){ return aviso('Falha ao embaralhar.'); }
+  aviso('Perguntas embaralhadas.'); sincronizar();
 }
 async function enviarPalpite(){
   var el = app.querySelector('#pv');
@@ -581,19 +785,27 @@ async function revelar(){
   try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao revelar. Tente de novo.'); }
   sincronizar();
 }
-async function proxima(){
+// Troca a pergunta sem gastar a rodada e sem contar ponto para ninguém.
+async function pular(){
   var sala = S.sala;
-  var upd;
-  if(sala.i + 1 >= sala.qs.length) upd = { fase:'fim' };
+  if(sala.i + 1 >= sala.qs.length) return aviso('Acabaram as perguntas de reserva. Escolha mais temas.');
+  var upd = { i: sala.i + 1, fase:'palpite', resultado: [] };
+  jogadores(sala).forEach(function(j){ upd['jogadores/' + j.id + '/rodada'] = -1; });
+  try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao pular.'); }
+  S.enviado = false; S.palpite = ''; sincronizar();
+}
+async function proxima(){
+  var sala = S.sala, upd;
+  if(sala.rodada >= sala.total) upd = { fase:'fim' };
   else {
-    upd = { fase:'palpite', i: sala.i + 1, resultado: [] };
+    upd = { fase:'palpite', i: sala.i + 1, rodada: sala.rodada + 1, resultado: [] };
     jogadores(sala).forEach(function(j){ upd['jogadores/' + j.id + '/rodada'] = -1; });
   }
   try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao avançar. Tente de novo.'); }
   S.enviado = false; S.palpite = ''; sincronizar();
 }
 async function denovo(){
-  var upd = { fase:'lobby', i:0, qs: sortear(S.temas, S.qtd), resultado: [] };
+  var upd = { fase:'lobby', i:0, rodada:1, total:S.qtd, qs: sortear(S.temas, S.qtd), resultado: [] };
   jogadores(S.sala).forEach(function(j){ upd['jogadores/' + j.id + '/pontos'] = 0; upd['jogadores/' + j.id + '/rodada'] = -1; });
   try{ await patchSala(S.codigo, upd); }catch(e){ return aviso('Falha ao reiniciar.'); }
   S.enviado = false; S.palpite = ''; sincronizar();
@@ -605,7 +817,7 @@ function localComecar(){
   var ns = S.nomesLocais.map(function(n){ return n.trim(); }).filter(Boolean);
   if(ns.length < 2) return aviso('Precisa de pelo menos 2 jogadores.');
   S.local = { jogadores: ns.map(function(n){ return { nome:n, pontos:0, palpite:null }; }),
-              qs: sortear(S.temas, S.qtd), i:0, vez:0, fase:'palpite', resultado:[] };
+              qs: sortear(S.temas, S.qtd), i:0, rodada:1, total:S.qtd, vez:0, fase:'palpite', resultado:[] };
   S.tela = 'local'; pintar(true);
 }
 function localEnviar(){
@@ -614,26 +826,39 @@ function localEnviar(){
   if(bruto === '') return aviso('Digite um número.');
   var L = S.local;
   L.jogadores[L.vez].palpite = parseInt(bruto, 10);
-  if(L.vez + 1 >= L.jogadores.length){
-    var q = Q[L.qs[L.i]];
-    var res = apurar(L.jogadores.map(function(p){ return { id:p.nome, nome:p.nome, palpite:p.palpite }; }), q.a);
-    res.forEach(function(r){
-      var p = L.jogadores.filter(function(x){ return x.nome === r.nome; })[0];
-      if(p) p.pontos += r.pts;
-    });
-    L.resultado = res; L.fase = 'revelacao';
-  } else L.vez++;
+  if(L.vez + 1 >= L.jogadores.length) L.fase = 'pronto';
+  else L.vez++;
+  pintar(true);
+}
+function localRevelar(){
+  var L = S.local, q = Q[L.qs[L.i]];
+  var res = apurar(L.jogadores.map(function(p){ return { id:p.nome, nome:p.nome, palpite:p.palpite }; }), q.a);
+  res.forEach(function(r){
+    var p = L.jogadores.filter(function(x){ return x.nome === r.nome; })[0];
+    if(p) p.pontos += r.pts;
+  });
+  L.resultado = res; L.fase = 'revelacao';
+  pintar(true);
+}
+function localPular(){
+  var L = S.local;
+  if(L.i + 1 >= L.qs.length) return aviso('Acabaram as perguntas de reserva. Escolha mais temas.');
+  L.i++; L.vez = 0; L.fase = 'palpite';
+  L.jogadores.forEach(function(p){ p.palpite = null; });
   pintar(true);
 }
 function localProxima(){
   var L = S.local;
-  if(L.i + 1 >= L.qs.length) L.fase = 'fim';
-  else { L.i++; L.vez = 0; L.fase = 'palpite'; L.jogadores.forEach(function(p){ p.palpite = null; }); }
+  if(L.rodada >= L.total) L.fase = 'fim';
+  else {
+    L.i++; L.rodada++; L.vez = 0; L.fase = 'palpite';
+    L.jogadores.forEach(function(p){ p.palpite = null; });
+  }
   pintar(true);
 }
 function localDenovo(){
   var L = S.local;
-  L.qs = sortear(S.temas, S.qtd); L.i = 0; L.vez = 0; L.fase = 'palpite';
+  L.qs = sortear(S.temas, S.qtd); L.i = 0; L.rodada = 1; L.total = S.qtd; L.vez = 0; L.fase = 'palpite';
   L.jogadores.forEach(function(p){ p.pontos = 0; p.palpite = null; });
   pintar(true);
 }
@@ -642,8 +867,8 @@ function localDenovo(){
 window.onerror = function(msg){
   app.innerHTML = '<div class="err">Algo quebrou: ' + esc(msg) + '</div><button onclick="location.reload()">Recarregar</button>';
 };
-var qs = new URLSearchParams(location.search);
-if(qs.get('sala')){ S.codigoIn = qs.get('sala').toUpperCase(); S.tela = 'entrar'; }
+var qsp = new URLSearchParams(location.search);
+if(qsp.get('sala')){ S.codigoIn = qsp.get('sala').toUpperCase(); S.tela = 'entrar'; }
 pintar(true);
 </script>
 </body>
